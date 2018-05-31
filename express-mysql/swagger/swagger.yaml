@@ -1,0 +1,187 @@
+swagger: '2.0'
+info:
+  description: Sample server API
+  version: 1.0.0
+  title: API
+
+host: 'localhost:8080'
+basePath: /
+tags:
+  - name: user
+    description: Operations about user
+    externalDocs:
+      description: Find out more about our store
+      url: 'http://swagger.io'
+schemes:
+  - http
+  - https
+  
+paths:
+  /:
+    get:
+      tags:
+        - serveApp
+      description: Serve Static Web App
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Page not found
+        default:
+          description: Successful operation
+          
+  /api/register:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/newUserDetails'
+      responses:
+        default:
+          description: successful operation
+  
+  /api/login:
+    post:
+      tags:
+        - user
+      summary: Login user
+      description: 'Logs user into the system'
+      operationId: loginUser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: User credentials for login
+          required: true
+          schema:
+            $ref: '#/definitions/loginCredentials'
+      responses:
+        '200':
+          description: User details
+          schema:
+            type: object
+            $ref: '#/definitions/userDetails'
+          headers:  {
+            'Authorization': {
+              type: string,
+              description: JWT
+            }
+          }
+          
+        '400':
+          description: Invalid email/password supplied
+        default:
+          description: Server Error
+
+
+  /api/users:
+    get:
+      tags:
+        - user
+      summary: Get users
+      description: ''
+      operationId: getUserByName
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Users'
+        '400':
+          description: Invalid username supplied
+        default:
+          description: Server Error
+        
+          
+  '/api/user/{id}':
+    get:
+      tags:
+        - user
+      summary: Get user details
+      description: ''
+      operationId: getUserById
+      parameters:
+        - name: id 
+          in: path
+          description: User id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/userDetails'
+        default:
+          description: 'Error'
+
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+
+
+definitions:
+
+  newUserDetails:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+
+  Users:
+    type: array
+    items:
+      $ref: '#/definitions/userDetails'
+      
+  userDetails:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+        description: User role
+  
+  loginCredentials:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+
+        
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'

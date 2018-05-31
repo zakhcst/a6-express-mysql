@@ -1,0 +1,8 @@
+table {
+  width: 100%;
+}
+
+.user-row:hover {
+  background: #eee;
+  transition: 0.5s ease-in-out;
+}
