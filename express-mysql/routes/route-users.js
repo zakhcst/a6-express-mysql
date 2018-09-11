@@ -1,4 +1,4 @@
-const DB = require('../db/queryDB.js');
+const DB = require('../db/db-query.js');
 const fs = require('fs');
 const util = require('util');
 const fileReadPromise = util.promisify(fs.readFile);

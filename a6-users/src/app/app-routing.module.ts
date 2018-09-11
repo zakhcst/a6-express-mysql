@@ -6,6 +6,7 @@ import { RegisterComponent} from './components/user-register/register.component'
 import { LoginComponent } from './components/user-login/login.component';
 import { UsersComponent } from './components/users/users.component';
 import { UserProfileComponent } from './components/user-profile/profile.component';
+import { UsersTableComponent } from './components/users-table/users-table.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,11 @@ const routes: Routes = [
     path: 'users',
     canActivate: [AuthGuard],
     component: UsersComponent
+  },
+  {
+    path: 'users-table',
+    canActivate: [AuthGuard],
+    component: UsersTableComponent
   },
   {
     path: 'user-profile',
@@ -44,5 +50,6 @@ export const routingComponents = [
   RegisterComponent,
   LoginComponent,
   UsersComponent,
-  UserProfileComponent
+  UserProfileComponent,
+  UsersTableComponent
 ];

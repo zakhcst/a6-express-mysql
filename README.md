@@ -8,34 +8,43 @@ The Express server is set to serve the application and the api requests from it.
 
 ## Prerequisits
 1. Installing in both directories, for the front and the back end, required node modules with npm:
-
-    npm i
+```
+npm i
+```
 2. Running MySQL server. Credentials are located in:
 ```
-    express-mysql/.env
+express-mysql/.env
 ```
 3. JWT keys are pre-generated and located in:
 ```
-    express-mysql/.env
+express-mysql/.env
 ```
-    The keys are located in:
+
+The keys are located in:
+
 ```
-    express-mysql/keys
+express-mysql/keys
 ```
 4. MySql tables have to be set. For development purposes the tables are populated with sample data.
     Automated DB/Tables setting scripts are located in:
 ```
-    express-mysql/db-init-mySql
+express-mysql/db-init-mySql
 ```
 ## Development 
 
-It is required to have running (prepopulated) MySQL and the development server in:
+It is required to have running (prepopulated) MySQL and the development express web server run in:
 ```
-    express-mysql/npm run dev
+express-mysql
+```
+
+with:
+
+```
+npm run dev
 ```
 In order to generate automatically builds which can be served by the Express server use:
 ```
-    ng build --watch
+ng build --watch
 ```
 
 ## Code scaffolding

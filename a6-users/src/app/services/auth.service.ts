@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { LoginService } from './user-login.service';
 import { UserDetailsService } from './user-details.service';
@@ -12,10 +12,7 @@ import { LoggedUser } from '../models/models.user';
 })
 
 export class AuthService {
-  private _loginUrl = '/api/login';
-  private _getUserUrl = '/api/userDetails';
   public user: LoggedUser;
-  // public userSubject$ = new Subject();
   public userSubject$ = new BehaviorSubject(null);
 
   constructor(

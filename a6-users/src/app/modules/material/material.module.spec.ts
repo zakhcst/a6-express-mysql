@@ -1,13 +1,13 @@
-import { MaterialModule } from './material.module';
+import { MaterialModules } from './material.module';
 
 describe('MaterialModule', () => {
-  let materialModule: MaterialModule;
+  let materialModules;
 
   beforeEach(() => {
-    materialModule = new MaterialModule();
+    materialModules = MaterialModules;
   });
 
   it('should create an instance', () => {
-    expect(materialModule).toBeTruthy();
+    expect(materialModules).toBeTruthy();
   });
 });
