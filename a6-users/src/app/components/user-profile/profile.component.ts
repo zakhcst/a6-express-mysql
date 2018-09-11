@@ -6,26 +6,25 @@ import { LoggedUser } from '../../models/models.user';
 import { Subscription, of } from 'rxjs';
 import { filter, catchError } from 'rxjs/operators';
 
-
 @Component({
   selector: 'app-user-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  private userData: LoggedUser;
-  private userDataBeforeUpdate: LoggedUser;
+  userData: LoggedUser;
+  userDataBeforeUpdate: LoggedUser;
   userRoles$;
   subjectSubscribed: Subscription;
   isLoading: Boolean = false;
 
-  constructor(
+  constructor (
     private _authService: AuthService,
-    private _userRoles: UserRolesService,
+    private _userRolesService: UserRolesService,
     private _userUpdate: UserUpdateService
   ) {
-    console.log('UserProfileComponent');
-    this.userRoles$ = this._userRoles.userRoles$;
+    console.log('constructor UserProfileComponent');
+    this.userRoles$ = _userRolesService.userRoles$;
     this.isLoading = true;
   }
 
@@ -36,7 +35,7 @@ export class UserProfileComponent implements OnInit {
       .subscribe((user: LoggedUser) => {
         this.isLoading = false;
         this.userData = user;
-        this.userDataBeforeUpdate = Object.assign({}, user);
+        this.userDataBeforeUpdate = {...user};
       });
   }
 

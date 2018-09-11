@@ -1,6 +1,3 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import {
   MatCardModule,
   MatTableModule,
@@ -10,6 +7,11 @@ import {
   MatSelectModule,
   MatDividerModule,
   MatPaginatorModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatListModule,
+  MatSortModule,
+  MatSlideToggleModule,
 } from '@angular/material';
 
 export const MaterialModules = [
@@ -20,5 +22,11 @@ export const MaterialModules = [
     MatProgressBarModule,
     MatSelectModule,
     MatDividerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatSortModule,
+    MatSlideToggleModule,
 ];

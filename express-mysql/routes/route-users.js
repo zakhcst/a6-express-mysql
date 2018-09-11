@@ -1,4 +1,4 @@
-const DB = require('../db/queryDB.js');
+const DB = require('../db/db-query.js');
 const fs = require('fs');
 const util = require('util');
 const fileReadPromise = util.promisify(fs.readFile);
@@ -50,14 +50,14 @@ router.post('/register', (req, res, next) => {
 });
 
 router.post('/update',  verifyToken, (req, res, next) => {
-  const query = 'UPDATE users SET name=?, role=? WHERE id=? AND email=? AND name=? AND role=?';
+  const query = 'UPDATE users SET name=?, roleId=? WHERE id=? AND email=? AND name=? AND roleId=?';
   const dataFields = [
     req.body.name,
-    req.body.role,
+    req.body.roleId,
     req.body.id,
     req.body.email,
     req.body.nameBeforeUpdate,
-    req.body.roleBeforeUpdate
+    req.body.roleIdBeforeUpdate
   ];
   const db = new DB();
 
@@ -119,7 +119,7 @@ router.post('/login', (req, res, next) => {
         userId: user.id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        roleId: user.roleId,
         sessionExp: sessionExpUTC,
         accessToken: token
       });
@@ -138,7 +138,7 @@ router.post('/login', (req, res, next) => {
 // Returns user details for userId set in the token (send from the client in Authorization header)
 router.get('/userDetails', verifyToken, (req, res, next) => {
 
-  const query = 'SELECT id, name, email, role FROM users WHERE id=?';
+  const query = 'SELECT id, name, email, roleId FROM users WHERE id=?';
   const dataFields = [req.userId];
   const db = new DB();
 
@@ -158,7 +158,7 @@ router.get('/userDetails', verifyToken, (req, res, next) => {
 
 // Returns user details for arbitrary user 
 router.get('/user/:id', verifyToken, (req, res, next) => {
-  const query = 'SELECT id, name, email, role FROM users WHERE id=?';
+  const query = 'SELECT id, name, email, roleId FROM users WHERE id=?';
   const dataFields = [parseInt(req.params.id, 10)];
   const db = new DB();
 
@@ -177,7 +177,8 @@ router.get('/user/:id', verifyToken, (req, res, next) => {
 });
 
 router.get('/users', verifyToken, (req, res, next) => {
-  const query = 'SELECT users.id, users.name, users.email, users.created, users.changed, users.enabled, roles.name AS role FROM users JOIN roles WHERE users.role=roles.id';
+  const query = 'SELECT users.id, users.name, users.email, users.created, users.changed, users.enabled, users.roleId, roles.name AS role FROM users JOIN roles WHERE users.roleId=roles.id';
+  // const query = 'SELECT *, roles.name AS role FROM users JOIN roles WHERE users.roleId=roles.id';
   const dataFields = [];
   const db = new DB();
 

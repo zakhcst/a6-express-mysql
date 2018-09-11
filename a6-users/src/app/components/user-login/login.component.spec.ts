@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestingModules } from '../../modules/testing/testing.module';
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
@@ -8,7 +8,8 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent ]
+      declarations: [ LoginComponent ],
+      imports: [ TestingModules ]
     })
     .compileComponents();
   }));
@@ -19,7 +20,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 });

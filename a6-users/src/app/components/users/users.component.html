@@ -1,6 +1,6 @@
-<mat-progress-bar 
-  *ngIf="isLoading" 
-  mode="indeterminate" 
+<mat-progress-bar
+  *ngIf="isLoading"
+  mode="indeterminate"
   class="example-tree-progress-bar">
 </mat-progress-bar>
 
@@ -36,7 +36,7 @@
     <!-- Created Column -->
     <ng-container matColumnDef="created">
       <th mat-header-cell *matHeaderCellDef fxShow fxHide.xs="true"> Created </th>
-      <td mat-cell *matCellDef="let element" fxShow fxHide.xs="true"> 
+      <td mat-cell *matCellDef="let element" fxShow fxHide.xs="true">
           {{element.created || 0 | date:'dd/MM/yy HH:mm':'UTC'}}
       </td>
     </ng-container>
@@ -44,7 +44,7 @@
     <!-- Last changed Column -->
     <ng-container matColumnDef="changed" >
       <th mat-header-cell *matHeaderCellDef> Last changed </th>
-      <td mat-cell *matCellDef="let element"> 
+      <td mat-cell *matCellDef="let element">
           {{element.changed || 0 | date:'dd/MM/yy HH:mm':'UTC'}}
       </td>
     </ng-container>
@@ -52,23 +52,29 @@
     <!-- Enabled Column -->
     <ng-container matColumnDef="enabled">
       <th mat-header-cell *matHeaderCellDef> Enabled </th>
-      <td mat-cell *matCellDef="let element"> 
+      <td mat-cell *matCellDef="let element">
         <mat-icon aria-label="Enabled user">
-          {{element.enabled ? 'check' : 'cancel'}} 
+          {{element.enabled ? 'check' : 'cancel'}}
         </mat-icon>
       </td>
     </ng-container>
 
 
-    <!-- Disable Column -->
+    <!-- Activate/Disable Column -->
     <ng-container matColumnDef="disable">
       <th mat-header-cell *matHeaderCellDef  fxHide fxShow.gt-xs>
         <mat-icon aria-label="Disable user"></mat-icon>
       </th>
       <td mat-cell *matCellDef="let element" style="text-align: right;" fxHide fxShow.gt-xs>
-        <button mat-icon-button color="warn" (click)="deleteUser(element.id)">
+      <!--   <button mat-icon-button color="warn" (click)="deleteUser(element.id)">
           <mat-icon aria-label="disable user">delete</mat-icon>
-        </button>
+        </button> -->
+        <!-- color="primary" -->
+        <mat-slide-toggle
+          [checked]="element.enabled"
+          [disabled]="element.id===(loggedUser$ | async)?.userId"
+          (click)="toggleUser(element)">
+        </mat-slide-toggle>
       </td>
     </ng-container>
 

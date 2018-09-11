@@ -13,7 +13,7 @@ IF NOT EXISTS users
     name VARCHAR(40) NOT NULL, 
     email VARCHAR(100) NOT NULL,
     password BINARY(60) NOT NULL,
-    role INT(10) DEFAULT 2,
+    roleId INT(10) DEFAULT 2,
     created BIGINT(14) NOT NULL DEFAULT 0,
     changed BIGINT(14) NOT NULL DEFAULT 0,
     enabled TINYINT(1) NOT NULL DEFAULT 1
