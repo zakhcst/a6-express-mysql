@@ -9,6 +9,7 @@ export class ApiEndPoints {
     registerUrl = '/api/register';
     updateUserUrl = '/api/update';
     getUsersUrl = '/api/users';
+    getLoggedUserDetailsUrl = '/api/loggedUserDetails';
     getUserDetailsUrl = '/api/userDetails';
     getUserRolesUrl = '/api/usersroles';
 }

@@ -3,17 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { ApiEndPoints } from '../api-end-points/user/user.endpoints';
 import { Observable } from 'rxjs';
 import { share } from 'rxjs/operators';
-import { LoggedUser } from '../models/models.user';
+import { User } from '../models/models.user';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class UserDetailsService {
+  userDetails$: Observable<User> = null;
 
-  public userDetails$: Observable<LoggedUser> = null;
-
-    constructor(private _http: HttpClient, private _api: ApiEndPoints) {
-      this.userDetails$ = this._http.get<any>(this._api.getUserDetailsUrl).pipe(share());
-    }
+  constructor(private _http: HttpClient, private _api: ApiEndPoints) {
+    this.userDetails$ = this._http
+      .get<User>(this._api.getLoggedUserDetailsUrl)
+      .pipe(share());
+  }
 }

@@ -14,10 +14,10 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" *ngIf="_authService.loggedIn()" routerLink="/user-profile" routerLinkActive="active">User Details</a>
+        <a class="nav-link" *ngIf="auth.loggedIn()" routerLink="/user-profile" routerLinkActive="active">User Details</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" *ngIf="_authService.loggedIn()" routerLink="/users" routerLinkActive="active">Users</a>
+        <a class="nav-link" *ngIf="auth.loggedIn()" routerLink="/users" routerLinkActive="active">Users</a>
       </li>
     </ul>
     <ul class="navbar-nav">
@@ -26,9 +26,9 @@
         &nbsp;
         <span class="text-danger">Logs out in {{ countDown | async | date:'HH:mm:ss':'UTC'}}</span>
       </p>
-      <a class="nav-link text-success" *ngIf="!_authService.loggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link text-warning" *ngIf="!_authService.loggedIn()" routerLink="/register" routerLinkActive="active">Register</a>
-      <a class="nav-link text-danger" *ngIf="_authService.loggedIn()"  style="cursor:pointer" (click)="_authService.logoutUser()">Logout</a>
+      <a class="nav-link text-success" *ngIf="!auth.loggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
+      <a class="nav-link text-warning" *ngIf="!auth.loggedIn()" routerLink="/register" routerLinkActive="active">Register</a>
+      <a class="nav-link text-danger" *ngIf="auth.loggedIn()"  style="cursor:pointer" (click)="auth.logoutUser()">Logout</a>
     </ul>
   </div>
 </nav>

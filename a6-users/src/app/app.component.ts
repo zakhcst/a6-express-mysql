@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { Router } from '@angular/router';
 import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { LoggedUser } from './models/models.user';
+import { User } from './models/models.user';
 
 @Component({
   selector: 'app-root',
@@ -14,20 +13,24 @@ import { LoggedUser } from './models/models.user';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
   userName = null;
+  auth;
   tickerGenerator$ = interval(1000);
   tickerSubscribed: Subscription;
   subjectSubscribed: Subscription;
   countDown = new Subject();
-  constructor(private _authService: AuthService, private _router: Router) {
+
+  constructor(private _authService: AuthService) {
     console.log('constructor AppComponent');
+    this.auth = _authService;
   }
 
   ngOnInit() {
-    // Init case when not subscribed yet
+    console.log('ngOnInit AppComponent');
+    // Init when not subscribed yet
     if (!this.subjectSubscribed) {
-      this.subjectSubscribed = this._authService.userSubject$
+      this.subjectSubscribed = this.auth.userSubject$
         .pipe(distinctUntilChanged())
-        .subscribe((user: LoggedUser | null) => {
+        .subscribe((user: User | null) => {
           if (
             user &&
             (!this.tickerSubscribed ||
@@ -38,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
               if (remainingTime <= 0) {
                 this.tickerSubscribed.unsubscribe();
                 this.userName = null;
-                this._authService.logoutUser();
+                this.auth.logoutUser();
               } else {
                 this.countDown.next(remainingTime);
                 this.userName = user.name;
@@ -52,7 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
             ) {
               this.tickerSubscribed.unsubscribe();
               this.userName = null;
-              this._authService.logoutUser();
+              this.auth.logoutUser();
             }
           }
         });

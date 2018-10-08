@@ -1,5 +1,5 @@
 
-export interface LoggedUser {
+export interface User {
   accessToken?: string;
   sessionExp?: number;
   userId: number;

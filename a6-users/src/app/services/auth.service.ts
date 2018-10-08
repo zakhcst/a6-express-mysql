@@ -5,14 +5,14 @@ import { tap } from 'rxjs/operators';
 
 import { LoginService } from './user-login.service';
 import { UserDetailsService } from './user-details.service';
-import { LoggedUser } from '../models/models.user';
+import { User } from '../models/models.user';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
-  public user: LoggedUser;
+  public user: User;
   public userSubject$ = new BehaviorSubject(null);
 
   constructor(
@@ -52,7 +52,7 @@ export class AuthService {
     );
   }
 
-  private setSession(authResult: LoggedUser) {
+  private setSession(authResult: User) {
     localStorage.setItem('token', authResult.accessToken);
     localStorage.setItem('token_expires_at', String(authResult.sessionExp));
     this.user = authResult;

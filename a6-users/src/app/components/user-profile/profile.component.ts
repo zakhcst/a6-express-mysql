@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserRolesService } from '../../services/user-roles.service';
 import { UserUpdateService } from '../../services/user-update.service';
-import { LoggedUser } from '../../models/models.user';
-import { Subscription, of } from 'rxjs';
+import { User } from '../../models/models.user';
+import { UserRoles } from '../../models/models.user-roles';
+import { Subscription, of, Observable } from 'rxjs';
 import { filter, catchError } from 'rxjs/operators';
 
 @Component({
@@ -12,9 +13,9 @@ import { filter, catchError } from 'rxjs/operators';
   styleUrls: ['./profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  userData: LoggedUser;
-  userDataBeforeUpdate: LoggedUser;
-  userRoles$;
+  userData: User;
+  userDataBeforeUpdate: User;
+  userRoles$: Observable<UserRoles[]>;
   subjectSubscribed: Subscription;
   isLoading: Boolean = false;
 
@@ -31,8 +32,8 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     // Init case when not subscribed yet
     this.subjectSubscribed = this._authService.userSubject$
-      .pipe(filter(user => user))
-      .subscribe((user: LoggedUser) => {
+      .pipe(filter(user => user)) // user != null
+      .subscribe((user: User) => {
         this.isLoading = false;
         this.userData = user;
         this.userDataBeforeUpdate = {...user};
@@ -56,15 +57,16 @@ export class UserProfileComponent implements OnInit {
       window.alert('Details were not changed');
       return;
     }
-    const user = Object.assign({}, this.userData, {
+    const user = { ...this.userData,
       nameBeforeUpdate: this.userDataBeforeUpdate.name,
       roleBeforeUpdate: this.userDataBeforeUpdate.role
-    });
+    };
     this._userUpdate
       .updateUserDetails(user)
       .pipe(catchError(error => of(error)))
       .subscribe(res => {
         if (res.status === 409 && res.error.affectedRows === 0) {
+          // reload new details
           window.alert('Details were updated by another user');
         }
         this.ngOnInit();
