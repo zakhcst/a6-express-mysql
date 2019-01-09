@@ -13,7 +13,7 @@ import { User } from './models/models.user';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
   userName = null;
-  auth;
+  auth: any;
   tickerGenerator$ = interval(1000);
   tickerSubscribed: Subscription;
   subjectSubscribed: Subscription;
@@ -27,10 +27,13 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log('ngOnInit AppComponent');
     // Init when not subscribed yet
+    // Logs out logged user when token session time has expired
+    // Manage ticher subscription every second until token session time has expired
     if (!this.subjectSubscribed) {
       this.subjectSubscribed = this.auth.userSubject$
-        .pipe(distinctUntilChanged())
-        .subscribe((user: User | null) => {
+      .pipe(distinctUntilChanged())
+      .subscribe((user: User) => {
+        console.log('ngOnInit AppComponent .subscribe');
           if (
             user &&
             (!this.tickerSubscribed ||

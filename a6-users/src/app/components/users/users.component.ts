@@ -1,9 +1,11 @@
-import { Component, OnInit, Injectable, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { UsersService } from '../../services/users.service';
+import { UserUpdateService } from '../../services/user-update.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/models.user';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { Observable } from 'rxjs';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { Observable, Subscription, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,47 +13,86 @@ import { Router } from '@angular/router';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   loggedUser$: Observable<User>;
+  usersSubscription: Subscription;
+  userUpdate: Subscription;
   displayedColumns = [
     'id',
     'name',
     'email',
     'role',
     'created',
-    'enabled',
     'changed',
-    'disable'
+    'active',
+    'activate'
   ];
-  dataSource: MatTableDataSource<User> = null;
+  data: Observable<User>;
+  dataSource: MatTableDataSource<User>;
   isLoading = false;
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
+  @ViewChild(MatSort)
+  sort: MatSort;
 
   constructor(
     private _users: UsersService,
     private _authService: AuthService,
-    private _router: Router
+    private _router: Router,
+    private _userUpdate: UserUpdateService
   ) {
-    this.isLoading = true;
-    const usersSubscription = _users.users$.subscribe(data => {
-      this.dataSource = new MatTableDataSource<User>(data);
-      this.dataSource.paginator = this.paginator;
-      this.isLoading = false;
-    });
-    this.loggedUser$ = _authService.userSubject$;
+    this.loggedUser$ = this._authService.userSubject$;
+    this.getUsersData();
   }
 
-  @ViewChild(MatPaginator)
-  paginator: MatPaginator;
+  getUsersData() {
+    this.isLoading = true;
+    this.usersSubscription = this._users.users$.subscribe(data => {
+    // this._users.users$.subscribe(data => {
+      this.dataSource = new MatTableDataSource<User>(data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.isLoading = false;
+      this.usersSubscription.unsubscribe();
+    })
+    // .unsubscribe();
+  }
+
   ngOnInit() {}
+  ngOnDestroy() {}
 
   toggleUser(user) {
     console.log('Toggle user', user);
-    console.log('Logged user');
-    console.log(this.loggedUser$.subscribe());
-    // console.log('Toggle user', this.dataSource);
+    console.log('Toggle user', user.active);
+    this._userUpdate
+      .updateUserDetails({
+        existing: { ...user },
+        updating: { ...user, active: !user.active }
+      })
+      .subscribe(
+        res => {
+          this.getUsersData();
+          window.alert('OK:');
+          window.alert(res);
+        },
+        catchError(e => {
+          if (e.status === 409 && e.error.affectedRows === 0) {
+            window.alert('Details were updated by another user');
+          }
+          window.alert('Err:');
+          this.getUsersData();
+          return of(e);
+        })
+      );
   }
-  clickedRow(row) {
-    console.log('clickedRow:', row);
-    this._router.navigate(['/']);
+
+  clickedRow(user) {
+    console.log(user);
+    this._router.navigate(['/user-profile', user.id]);
+  }
+
+  myTrackById(id) {
+    return id;
   }
 }

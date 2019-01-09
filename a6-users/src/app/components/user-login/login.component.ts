@@ -16,7 +16,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   loginUser () {
-    // To do: Show incomlete form error
     if (!this.loginUserData['email'] || !this.loginUserData['password']) {
       return;
     }

@@ -49,15 +49,20 @@ router.post('/register', (req, res, next) => {
 
 router.post('/update', verifyToken, (req, res, next) => {
   const query =
-    'UPDATE users SET name=?, roleId=? WHERE id=? AND email=? AND name=? AND roleId=?';
+    'UPDATE users SET name=?, roleId=?, active=? WHERE id=? AND email=? AND name=? AND roleId=? AND active=?';
+
+  const { existing, updating } = req.body;
   const dataFields = [
-    req.body.name,
-    req.body.roleId,
-    req.body.id,
-    req.body.email,
-    req.body.nameBeforeUpdate,
-    req.body.roleIdBeforeUpdate
+    updating.name,
+    updating.roleId,
+    updating.active,
+    existing.id,
+    existing.email,
+    existing.name,
+    existing.roleId,
+    existing.active
   ];
+  
   const db = new DB();
 
   db.query(query, dataFields)
@@ -116,7 +121,7 @@ router.post('/login', (req, res, next) => {
       let token = jwt.sign(payload, privateKey, options);
 
       res.json({
-        userId: user.id,
+        id: user.id,
         name: user.name,
         email: user.email,
         roleId: user.roleId,
@@ -137,7 +142,7 @@ router.post('/login', (req, res, next) => {
 
 // Returns user details for userId set in the token (send from the client in Authorization header)
 router.get('/loggedUserDetails', verifyToken, (req, res, next) => {
-  const query = 'SELECT id, name, email, roleId FROM users WHERE id=?';
+  const query = 'SELECT id, name, email, roleId, active FROM users WHERE id=?';
   const dataFields = [req.userId];
   const db = new DB();
 
@@ -156,12 +161,12 @@ router.get('/loggedUserDetails', verifyToken, (req, res, next) => {
 
 // Returns user details for arbitrary user
 router.get('/user/:id', verifyToken, (req, res, next) => {
-  const query = 'SELECT id, name, email, roleId FROM users WHERE id=?';
+  const query = 'SELECT id, name, email, roleId, active FROM users WHERE id=?';
   const dataFields = [parseInt(req.params.id, 10)];
   const db = new DB();
 
   db.query(query, dataFields)
-    .then(results => res.json(results))
+    .then(results => res.json(results[0]))
     .catch(error => {
       console.error(error);
       res.status(500).json(error || { message: 'Server error' });
@@ -175,7 +180,7 @@ router.get('/user/:id', verifyToken, (req, res, next) => {
 
 router.get('/users', verifyToken, (req, res, next) => {
   const query =
-    'SELECT users.id, users.name, users.email, users.created, users.changed, users.enabled, users.roleId, roles.name AS role FROM users JOIN roles WHERE users.roleId=roles.id';
+    'SELECT users.id, users.name, users.email, users.created, users.changed, users.active, users.roleId, roles.name AS role FROM users JOIN roles WHERE users.roleId=roles.id';
   // const query = 'SELECT *, roles.name AS role FROM users JOIN roles WHERE users.roleId=roles.id';
   const dataFields = [];
   const db = new DB();

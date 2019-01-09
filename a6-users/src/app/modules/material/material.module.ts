@@ -11,22 +11,22 @@ import {
   MatToolbarModule,
   MatListModule,
   MatSortModule,
-  MatSlideToggleModule,
+  MatSlideToggleModule
 } from '@angular/material';
 
 export const MaterialModules = [
-    MatCardModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatSelectModule,
-    MatDividerModule,
-    MatPaginatorModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatSortModule,
-    MatSlideToggleModule,
+  MatCardModule,
+  MatTableModule,
+  MatButtonModule,
+  MatIconModule,
+  MatProgressBarModule,
+  MatSelectModule,
+  MatDividerModule,
+  MatPaginatorModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatSidenavModule,
+  MatListModule,
+  MatSortModule,
+  MatSlideToggleModule
 ];

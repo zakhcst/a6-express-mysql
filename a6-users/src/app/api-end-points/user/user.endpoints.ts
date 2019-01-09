@@ -8,8 +8,8 @@ export class ApiEndPoints {
     loginUrl = '/api/login';
     registerUrl = '/api/register';
     updateUserUrl = '/api/update';
+    getUserUrl = '/api/user';
     getUsersUrl = '/api/users';
     getLoggedUserDetailsUrl = '/api/loggedUserDetails';
-    getUserDetailsUrl = '/api/userDetails';
     getUserRolesUrl = '/api/usersroles';
 }

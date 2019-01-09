@@ -10,21 +10,17 @@ import { User } from '../models/models.user';
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthService {
-  public user: User;
-  public userSubject$ = new BehaviorSubject(null);
+  public user: User = null;
+  public userSubject$ = new BehaviorSubject<User>(null);
 
   constructor(
     private _router: Router,
     private _login: LoginService,
     private _userDetails: UserDetailsService
   ) {
-    console.log('AuthService constructor');
-    if (this.loggedIn()) {
+    if (this.loggedIn() && !this.user) {
       this.refreshUserDetails();
-    } else {
-      this.user = null;
     }
   }
 
@@ -33,34 +29,38 @@ export class AuthService {
   // and on reload (F5/Ctrl-R)
   refreshUserDetails() {
     console.log('AuthService refreshUserDetails');
-    const userDetailsSubscription = this._userDetails.userDetails$.subscribe(
-      data => {
+    // const userDetailsSubscription = this._userDetails
+    this._userDetails
+      .getUserDetails(this.getUserId())
+      .subscribe((data: User) => {
         this.user = data;
         this.user.sessionExp = Number(localStorage.getItem('token_expires_at'));
         this.userSubject$.next(this.user);
-        userDetailsSubscription.unsubscribe();
-      }
-    );
+        // userDetailsSubscription.unsubscribe();
+      }).unsubscribe();
   }
 
   loginUser(userLoginCredentials) {
     return this._login.loginUser(userLoginCredentials).pipe(
       tap(data => {
         this.setSession(data);
-        this.userSubject$.next(this.user);
+        // this.userSubject$.next(this.user);
+        this.userSubject$.next(data);
       })
     );
   }
 
-  private setSession(authResult: User) {
+  setSession(authResult: User) {
     localStorage.setItem('token', authResult.accessToken);
     localStorage.setItem('token_expires_at', String(authResult.sessionExp));
+    localStorage.setItem('id', String(authResult.id));
     this.user = authResult;
   }
 
   logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('token_expires_at');
+    localStorage.removeItem('id');
     if (this.user) {
       this.user = null;
       this.userSubject$.next(this.user);
@@ -71,6 +71,9 @@ export class AuthService {
 
   getToken() {
     return localStorage.getItem('token');
+  }
+  getUserId() {
+    return localStorage.getItem('id');
   }
 
   loggedIn() {
